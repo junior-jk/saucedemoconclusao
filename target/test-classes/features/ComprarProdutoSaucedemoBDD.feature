@@ -1,4 +1,4 @@
-
+#language: pt;
 
 Feature: Comprar Produto com Sucesso
           Escolher e validadar produto no carrinho
