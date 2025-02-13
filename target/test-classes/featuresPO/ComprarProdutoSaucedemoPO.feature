@@ -1,15 +1,15 @@
 # language: pt;
 
-Feature: Adicionar produto ao carrinho e validar nome e preço PO
+Feature: Comprar Produto com Sucesso PO
          Escolher e validar produto no site SauceDemo
 
 
   Scenario Outline: Comprar com Sucesso PO
-    Dado que estou na pagina de login do SauceDemo PO
-    Quando eu faço login com usuario "<usuario>" e senha "<senha>" PO
-    E adiciono o produto "<produto>" ao carrinho PO
-    Entao o produto no carrinho deve ter o nome "<produto>" PO
-    Entao o preço deve ser "<preco>" PO
+    Dado que acesso o site "https://www.saucedemo.com/" PO
+    Quando eu faço login com "<usuario>" e "<senha>" PO
+    E adiciono o "<produto>" ao carrinho PO
+    Entao no carrinho deve ter o nome do item escolhido "<produto>" PO
+    Entao o valor sera "<preco>" PO
 
    Examples:
       | usuario         | senha          | produto                | preco   |

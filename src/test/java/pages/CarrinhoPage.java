@@ -1,26 +1,20 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.junit.jupiter.api.Assertions;
 
-public class CarrinhoPage {
-    private WebDriver driver;
+public class CarrinhoPage extends BasePage {
+    private By botaoCarrinho = By.className("shopping_cart_link");
 
-    public CarrinhoPage(WebDriver driver) {
-        this.driver = driver;
+    public void abrirCarrinho() {
+        driver.findElement(botaoCarrinho).click();
     }
 
-    private By nomeProduto = By.className("inventory_item_name");
-    private By precoProduto = By.className("inventory_item_price");
-
-    public void validarNomeProduto(String produtoEsperado) {
-        String nomeNoCarrinho = driver.findElement(nomeProduto).getText();
-        Assertions.assertEquals(produtoEsperado, nomeNoCarrinho);
+    public boolean verificarProdutoNoCarrinho(String nomeProduto) {
+        String xpathProduto = "//div[@class='cart_item']//div[text()='" + nomeProduto + "']";
+        return driver.findElements(By.xpath(xpathProduto)).size() > 0;
     }
 
-    public void validarPrecoProduto(String precoEsperado) {
-        String precoNoCarrinho = driver.findElement(precoProduto).getText();
-        Assertions.assertEquals(precoEsperado, precoNoCarrinho);
+    public String obterPrecoDoProduto() {
+        return driver.findElement(By.className("inventory_item_price")).getText();
     }
 }

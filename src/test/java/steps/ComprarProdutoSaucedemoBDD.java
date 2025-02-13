@@ -1,59 +1,60 @@
 package steps;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
+
 import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import static org.junit.Assert.assertTrue;
+
 import pages.LoginPage;
+import pages.ProdutoPage;
 import pages.CarrinhoPage;
 
-import java.time.Duration;
-
 public class ComprarProdutoSaucedemoBDD {
+ 
+    LoginPage loginPage = new LoginPage();
+    ProdutoPage produtoPage = new ProdutoPage();
+    CarrinhoPage carrinhoPage = new CarrinhoPage();
+
+
     WebDriver driver;
-    LoginPage loginPage;
-    CarrinhoPage carrinhoPage;
 
-    @Before
-    public void iniciar() {
-        // WebDriverManager.chromedriver().setup();
+    @Dado("que acesso o site {string}")
+    public void que_acesso_o_site(String url) {
         driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-        driver.manage().window().maximize();
-        loginPage = new LoginPage(driver);
-        carrinhoPage = new CarrinhoPage(driver);
+        driver.get(url);
     }
 
-    @After
-    public void finalizar() {
+    @Quando("eu faço login com usuario {string} e senha {string}")
+    @Quando("eu faço login com {string} e {string}")
+    public void eu_faco_login_com_usuario_e_senha(String usuario, String senha) {
+        driver.findElement(By.id("user-name")).sendKeys(usuario);
+        driver.findElement(By.id("password")).sendKeys(senha);
+        driver.findElement(By.id("login-button")).click();
+    }
+
+    @Quando("adiciono o produto {string} ao carrinho")
+    @Quando("adiciono o {string} ao carrinho")
+    public void adiciono_o_produto_ao_carrinho(String produto) {
+        driver.findElement(By.xpath("//div[text()='" + produto + "']")).click();
+        driver.findElement(By.cssSelector(".btn_inventory")).click();
+    }
+
+    @Entao("o produto no carrinho deve ter o nome {string}")
+    public void o_produto_no_carrinho_deve_ter_o_nome(String produto) {
+        Assert.assertTrue(driver.findElement(By.xpath("//div[@class='cart_item']//div[text()='" + produto + "']")).isDisplayed());
+        assertTrue(driver.findElement(By.xpath("//div[@class='cart_item']//div[text()='" + produto + "']")).isDisplayed());
+    }
+
+    @Entao("o preço deve ser {string}")
+    @Entao("o valor sera {string}")
+    public void o_preco_deve_ser(String preco) {
+        assertTrue(driver.findElement(By.xpath("//div[@class='cart_item']//div[text()='" + preco + "']")).isDisplayed());
         driver.quit();
-    }
-    
-
-    @Dado("que o usuario esta logado no site")
-    public void que_o_usuario_esta_logado_no_site() {
-        driver.get("https://www.saucedemo.com/");
-        loginPage.fazerLogin("standard_user", "secret_sauce");
-    }
-
-    @Quando("o usuario adiciona o produto {string} ao carrinho")
-    public void o_usuario_adiciona_o_produto_ao_carrinho(String produto) {
-        driver.findElement(By.id("add-to-cart-" + produto.replaceAll(" ", "-").toLowerCase())).click();
-    }
-
-    @Entao("o nome do produto no carrinho deve ser {string}")
-    public void o_nome_do_produto_no_carrinho_deve_ser(String nomeProduto) {
-        driver.findElement(By.className("shopping_cart_link")).click();
-        carrinhoPage.validarNomeProduto(nomeProduto);
-    }
-
-    @Entao("o preco do produto no carrinho deve ser {string}")
-    public void o_preco_do_produto_no_carrinho_deve_ser(String precoProduto) {
-        carrinhoPage.validarPrecoProduto(precoProduto);
     }
 }
