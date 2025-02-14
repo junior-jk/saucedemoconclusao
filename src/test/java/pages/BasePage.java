@@ -9,7 +9,6 @@ public class BasePage {
     public static WebDriver driver;
 
     public static void abrirNavegador(String url) {
-        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get(url);

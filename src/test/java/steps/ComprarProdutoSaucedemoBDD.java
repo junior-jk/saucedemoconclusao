@@ -17,19 +17,18 @@ import pages.CarrinhoPage;
 
 public class ComprarProdutoSaucedemoBDD {
  
-    LoginPage loginPage = new LoginPage();
+    WebDriver driver;
+
+    LoginPage loginPage;
     ProdutoPage produtoPage = new ProdutoPage();
     CarrinhoPage carrinhoPage = new CarrinhoPage();
-
-
-    WebDriver driver;
 
     @Dado("que acesso o site {string}")
     public void que_acesso_o_site(String url) {
         driver = new ChromeDriver();
+        loginPage = new LoginPage(driver);
         driver.get(url);
     }
-
     @Quando("eu faço login com usuario {string} e senha {string}")
     @Quando("eu faço login com {string} e {string}")
     public void eu_faco_login_com_usuario_e_senha(String usuario, String senha) {
